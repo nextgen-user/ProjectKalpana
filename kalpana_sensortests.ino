@@ -4,6 +4,7 @@
 #include <MPU9250_WE.h>
 
 #define MPU9250_ADDR 0x68
+#define SEALEVELPRESSURE_HPA (1013.25) // Change if needed
 
 // BMP280 on Wire1 (SDA1/SCL1)
 Adafruit_BMP280 bmp(&Wire1);
@@ -73,6 +74,8 @@ void loop() {
   bmp_temp->getEvent(&temp_event);
   bmp_pressure->getEvent(&pressure_event);
 
+  float altitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
+
   Serial.println("=== BMP280 (SDA1/SCL1) ===");
   Serial.print("Temperature: ");
   Serial.print(temp_event.temperature);
@@ -81,6 +84,10 @@ void loop() {
   Serial.print("Pressure: ");
   Serial.print(pressure_event.pressure);
   Serial.println(" hPa");
+
+  Serial.print("Altitude: ");
+  Serial.print(altitude);
+  Serial.println(" m");
 
   // --- MPU9250 Readings ---
   xyzFloat gValue = myMPU9250.getGValues();
@@ -100,13 +107,6 @@ void loop() {
   Serial.print(gyr.x); Serial.print("  ");
   Serial.print(gyr.y); Serial.print("  ");
   Serial.println(gyr.z);
-
-  // Serial.println("Magnetometer (µT):");
-  // Serial.print(magValue.x); Serial.print("  ");
-  // Serial.print(magValue.y); Serial.print("  ");
-  // Serial.println(magValue.z);
-
-  // Serial.print("Temperature: "); Serial.println(temp);
 
   Serial.println("****TEAM_KALPANA_SENSOR_TESTING_TEENSY4.1****");
   delay(1000);
